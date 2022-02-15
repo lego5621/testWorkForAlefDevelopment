@@ -2,7 +2,10 @@
   <div>
     <div>
       <p class="mt-8 text-base font-medium">Персональные данные</p>
-      <p class="mt-5 font-bold text-base">Василий, 30 лет</p>
+      <p class="mt-5 font-bold text-base">
+        {{ this.$store.state.initials.name }},
+        {{ this.$store.state.initials.age }} лет
+      </p>
     </div>
     <div class="mt-16">
       <p class="font-medium">Дети</p>

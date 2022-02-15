@@ -6,14 +6,14 @@
         <div class="floating-input mb-5 relative">
           <input
             type="text"
-            id="email"
+            id="name"
             class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
             placeholder="Имя"
-            autocomplete="off"
+            v-model="name"
           />
 
           <label
-            for="email"
+            for="name"
             class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
             >Имя</label
           >
@@ -21,14 +21,15 @@
         <div class="floating-input mb-5 relative">
           <input
             type="text"
-            id="password"
+            id="age"
             class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
             placeholder="Возраст"
             autocomplete="off"
+            v-model="age"
           />
 
           <label
-            for="password"
+            for="age"
             class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
           >
             Возраст
@@ -48,13 +49,50 @@
         </button>
       </div>
       <div>
-        <ChildrenForm
+        <div
+          class="w-full flex mb-2.5"
           v-for="(item, index) in childrenArr"
           v-bind:key="index"
-          @removeChildren="removeChildren"
-          @changeChildren="changeChildren"
-          v-bind:index="index"
-        />
+        >
+          <div class="floating-input relative grow">
+            <input
+              type="text"
+              id="name"
+              class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
+              placeholder="Имя"
+              autocomplete="off"
+              v-model="item.name"
+            />
+
+            <label
+              for="name"
+              class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
+            >
+              Имя
+            </label>
+          </div>
+          <div class="floating-input relative mx-4 grow">
+            <input
+              type="number"
+              id="age"
+              class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
+              placeholder="Возраст"
+              autocomplete="off"
+              v-model="item.age"
+              v-int
+            />
+
+            <label
+              for="age"
+              class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
+            >
+              Возраст
+            </label>
+          </div>
+          <button class="flex items-center text-sm btn-remove">
+            <span v-on:click="removeChildren(index)"> Удалить </span>
+          </button>
+        </div>
       </div>
       <button
         class="mt-8 mb-2 rounded-3xl btn-save py-2.5 px-5 text-white text-sm"
@@ -72,8 +110,10 @@ import Vue from "vue";
 import { mapGetters } from "vuex";
 
 export default {
-  data: function () {
+  data() {
     return {
+      name: "",
+      age: "",
       childrenArr: [],
     };
   },
@@ -96,7 +136,15 @@ export default {
 
     saveInStore() {
       this.$store.commit("saveChildren", [...this.childrenArr]);
+      this.$store.commit("saveInitials", {
+        name: this.name,
+        age: this.age,
+      });
     },
+  },
+
+  mounted() {
+    this.childrenArr = [...this.$store.state.children];
   },
 };
 </script>
