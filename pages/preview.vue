@@ -3,7 +3,7 @@
     <div>
       <p class="mt-8 text-base font-medium">Персональные данные</p>
       <p class="mt-5 font-bold text-base">
-        {{ this.$store.state.initials.name }},
+        {{ this.$store.state.initials.name }}, 
         {{ this.$store.state.initials.age }} лет
       </p>
     </div>
@@ -15,7 +15,7 @@
           v-for="(child, index) in getChildren"
           v-bind:key="index"
         >
-          <!-- индекс используется как ключ потому что дети могут быть одного и того же возраста и имени, для простых действий а-ля для вывода небольшого списка думаю это нормально -->
+          <!-- индекс используется как ключ потому что дети могут быть одного и того же возраста и имени, для простых действий а-ля для вывода небольшого списка использовать шndex это нормально -->
           <p class="child-box font-bold">
             {{ child.name }}, {{ child.age }} лет
           </p>

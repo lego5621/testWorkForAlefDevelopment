@@ -2,16 +2,17 @@ export const state = () => ({
   children: [],
   initials: {
     name: "",
-    age: '',
+    age: "",
   },
 });
 
 export const mutations = {
   saveChildren(state, payload) {
-    state.children = payload;
+    // интересный баг, если не глубокая копия то vuex считает, что данные изменяются, и выкидывает ошибку ...
+    state.children = JSON.parse(JSON.stringify(payload));
   },
   saveInitials(state, payload) {
-    state.initials = payload;
+    state.initials = JSON.parse(JSON.stringify(payload));
   },
 };
 

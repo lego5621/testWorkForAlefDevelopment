@@ -3,37 +3,16 @@
     <div class="pb-8">
       <p class="py-5 text-base font-medium leading-6">Персональные данные</p>
       <div class="w-full">
-        <div class="floating-input mb-5 relative">
-          <input
-            type="text"
-            id="name"
-            class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
-            placeholder="Имя"
-            v-model="name"
-          />
-
-          <label
-            for="name"
-            class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
-            >Имя</label
-          >
+        <div class="mb-5">
+          <Input type="text" placeholder="Имя" label="Имя" v-model="name" />
         </div>
-        <div class="floating-input mb-5 relative">
-          <input
-            type="text"
-            id="age"
-            class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
+        <div class="mb-5">
+          <Input
+            type="number"
             placeholder="Возраст"
-            autocomplete="off"
+            label="Возраст"
             v-model="age"
           />
-
-          <label
-            for="age"
-            class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
-          >
-            Возраст
-          </label>
         </div>
       </div>
     </div>
@@ -42,7 +21,7 @@
         <p class="text-base font-medium leading-6">Дети (макс. 5)</p>
         <button
           class="btn-add-child rounded-3xl py-2.5 px-5 text-sm"
-          v-if="this.childrenArr.length < 5"
+          v-show="this.childrenArr.length < 5"
           @click="addChildren"
         >
           <i></i> Добавить ребенка
@@ -54,49 +33,33 @@
           v-for="(item, index) in childrenArr"
           v-bind:key="index"
         >
-          <div class="floating-input relative grow">
-            <input
+          <div class="grow">
+            <Input
               type="text"
-              id="name"
-              class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
               placeholder="Имя"
-              autocomplete="off"
+              label="Имя"
               v-model="item.name"
             />
-
-            <label
-              for="name"
-              class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
-            >
-              Имя
-            </label>
           </div>
-          <div class="floating-input relative mx-4 grow">
-            <input
+          <div class="mx-4 grow">
+            <Input
               type="number"
-              id="age"
-              class="border border-gray-200 focus:outline-none rounded-md focus:shadow-sm w-full px-4 pb-1.5 h-14 text-sm"
               placeholder="Возраст"
-              autocomplete="off"
+              label="Возраст"
               v-model="item.age"
-              v-int
             />
-
-            <label
-              for="age"
-              class="absolute top-0 left-0 px-4 py-4 h-full pointer-events-none transform origin-left transition-all duration-100 ease-in-out"
-            >
-              Возраст
-            </label>
           </div>
-          <button class="flex items-center text-sm btn-remove">
-            <span v-on:click="removeChildren(index)"> Удалить </span>
+          <button
+            class="flex items-center text-sm btn-remove"
+            v-on:click="removeChildren(index)"
+          >
+            Удалить
           </button>
         </div>
       </div>
       <button
         class="mt-8 mb-2 rounded-3xl btn-save py-2.5 px-5 text-white text-sm"
-        v-if="this.childrenArr.length > 0"
+        v-show="this.childrenArr.length > 0"
         @click="saveInStore"
       >
         Сохранить
@@ -106,9 +69,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { mapGetters } from "vuex";
-
 export default {
   data() {
     return {
@@ -127,13 +87,6 @@ export default {
       this.childrenArr.splice(start, 1);
     },
 
-    changeChildren(item) {
-      Vue.set(this.childrenArr, item.index, {
-        name: item.name,
-        age: item.age,
-      });
-    },
-
     saveInStore() {
       this.$store.commit("saveChildren", [...this.childrenArr]);
       this.$store.commit("saveInitials", {
@@ -144,30 +97,14 @@ export default {
   },
 
   mounted() {
-    this.childrenArr = [...this.$store.state.children];
+    this.childrenArr = JSON.parse(JSON.stringify(this.$store.state.children));
+    this.name = JSON.parse(JSON.stringify(this.$store.state.initials.name));
+    this.age = JSON.parse(JSON.stringify(this.$store.state.initials.age));
   },
 };
 </script>
 
 <style>
-.floating-input label {
-  color: rgba(17, 17, 17, 0.48);
-}
-
-.floating-input > input::placeholder {
-  color: transparent;
-}
-
-.floating-input > input:focus,
-.floating-input > input:not(:placeholder-shown) {
-  @apply pt-8;
-}
-
-.floating-input > input:focus ~ label,
-.floating-input > input:not(:placeholder-shown) ~ label {
-  @apply opacity-75 scale-75 -translate-y-3 translate-x-1;
-}
-
 .btn-add-child {
   border: 2px solid #01a7fd;
   box-sizing: border-box;
